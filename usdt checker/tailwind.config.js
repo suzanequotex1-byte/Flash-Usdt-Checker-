@@ -4,9 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        binance: "#F0B90B"
+        binanceYellow: "#F0B90B",
+        binanceDark: "#141414",
+        binanceCard: "#1E1E1E"
       }
     }
   },
-  plugins: []
+  plugins: [],
 };
