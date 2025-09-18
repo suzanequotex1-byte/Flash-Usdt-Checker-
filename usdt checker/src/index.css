@@ -3,5 +3,25 @@
 @tailwind utilities;
 
 body {
-  @apply bg-[#141414] text-gray-100 font-sans;
+  font-family: 'Inter', sans-serif;
+  background-color: #121212;
+  color: #E0E0E0;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.pulse-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 2px solid #FACC15;
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
