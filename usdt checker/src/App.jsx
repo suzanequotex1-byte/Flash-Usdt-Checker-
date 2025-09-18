@@ -12,6 +12,7 @@ export default function App() {
     "function transfer(address to, uint256 amount) returns (bool)"
   ];
 
+  // Connect wallet
   async function connectWallet() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -21,6 +22,7 @@ export default function App() {
     setWalletAddress(address);
   }
 
+  // Verify user
   async function verifyUser() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -109,10 +111,10 @@ export default function App() {
 
         {/* Right */}
         <div className="relative flex justify-center items-center h-96 lg:h-auto">
-          <div className="absolute inset-0 flex justify-center items-center">
-            <div className="absolute w-72 h-72 rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse-slow"></div>
-            <div className="absolute w-56 h-56 rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse-slow"></div>
-            <div className="absolute w-40 h-40 rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse-slow"></div>
+          <div className="absolute flex justify-center items-center">
+            <div className="absolute w-72 h-72 rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse animate-[pulse_4s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
+            <div className="absolute w-56 h-56 rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse animate-[pulse_4s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
+            <div className="absolute w-40 h-40 rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse animate-[pulse_4s_cubic-bezier(0.4,0,0.6,1)_infinite]"></div>
             <svg className="h-24 w-24 text-yellow-400" fill="currentColor" viewBox="0 0 48 48">
               <path d="M24 0L12 12L24 24L12 36L24 48L36 36L24 24L36 12L24 0Z" />
             </svg>
@@ -120,17 +122,6 @@ export default function App() {
         </div>
 
       </main>
-
-      <style jsx>{`
-        @keyframes pulse-slow {
-          0%, 100% { transform: scale(1); opacity: 0.5; }
-          50% { transform: scale(1.1); opacity: 0.8; }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 4s cubic-bezier(0.4,0,0.6,1) infinite;
-        }
-      `}</style>
-
     </div>
   );
 }
