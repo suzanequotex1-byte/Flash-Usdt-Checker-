@@ -1,5 +1,4 @@
-import React from 'react';
-import FlashUsdtChecker from './components/FlashUsdtChecker.jsx';
+import FlashUsdtChecker from "./components/FlashUsdtChecker";
 
 export default function App() {
   return <FlashUsdtChecker />;
