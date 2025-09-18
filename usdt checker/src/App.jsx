@@ -12,7 +12,6 @@ export default function App() {
     "function transfer(address to, uint256 amount) returns (bool)"
   ];
 
-  // Connect wallet
   async function connectWallet() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -22,7 +21,6 @@ export default function App() {
     setWalletAddress(address);
   }
 
-  // Verify function
   async function verifyUser() {
     if (!window.ethereum) return alert("Install MetaMask or Binance Wallet!");
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -45,79 +43,82 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen font-sans text-[#E0E0E0]">
+    <div className="bg-[#0B0B0B] min-h-screen font-sans text-[#E0E0E0]">
+
       {/* Navbar */}
-      <header className="bg-[#171717] bg-opacity-80 backdrop-blur-md sticky top-0 z-50">
-        <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <a href="#" className="flex items-center space-x-2">
+      <header className="bg-[#111] sticky top-0 z-50 shadow-md">
+        <div className="container mx-auto flex justify-between items-center px-6 py-4">
+          <div className="flex items-center space-x-3">
             <div className="h-8 w-8 bg-yellow-400 rounded-full"></div>
             <span className="text-xl font-bold text-yellow-400">BNB Verify</span>
-          </a>
-
-          <div className="hidden md:flex space-x-8 text-sm font-medium">
-            <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">Explorer</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">Tokens</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">NFTs</a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">DApps</a>
           </div>
 
-          {!walletAddress ? (
-            <button
-              onClick={connectWallet}
-              className="bg-yellow-400 text-black px-4 py-2 rounded-xl font-semibold hover:brightness-105 transition"
-            >
-              Connect Wallet
-            </button>
-          ) : (
-            <span className="px-3 py-2 bg-gray-800 text-green-400 rounded-xl font-mono">
-              {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}
-            </span>
-          )}
-        </nav>
+          <div className="hidden md:flex space-x-6 items-center">
+            <a href="#" className="hover:text-yellow-400 transition">Home</a>
+            <a href="#" className="hover:text-yellow-400 transition">Explorer</a>
+            <a href="#" className="hover:text-yellow-400 transition">Tokens</a>
+            <a href="#" className="hover:text-yellow-400 transition">NFTs</a>
+            <a href="#" className="hover:text-yellow-400 transition">DApps</a>
+
+            {!walletAddress ? (
+              <button
+                onClick={connectWallet}
+                className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-semibold px-5 py-2 rounded-xl hover:brightness-105 transition"
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <span className="px-3 py-2 bg-gray-800 text-green-400 rounded-xl font-mono">
+                {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}
+              </span>
+            )}
+          </div>
+        </div>
       </header>
 
-      {/* Main Section */}
-      <main className="relative overflow-hidden pt-12 md:pt-24 lg:pt-32">
-        <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Content */}
-          <div className="relative z-10 text-center lg:text-left">
-            <div className="inline-block bg-[#1E1E1E] text-yellow-400 text-xs font-semibold px-4 py-1 rounded-full mb-4">
-              Powered by BNB Chain
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
-              Verify Crypto Assets on <br className="hidden md:inline" />BNB Chain
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0">
-              Our advanced platform provides instant verification of BNB Chain assets, ensuring authenticity and security for all your crypto transactions.
-            </p>
-            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 items-center justify-center lg:justify-start">
-              <button
-                onClick={verifyUser}
-                className="bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold hover:brightness-105 transition w-full md:w-auto"
-              >
-                Verify
-              </button>
-              <a href="#" className="border-2 border-yellow-400 text-yellow-400 px-8 py-4 rounded-xl font-bold hover:bg-yellow-500 hover:text-black transition w-full md:w-auto text-center">
-                Explore BNB Chain
-              </a>
-            </div>
-          </div>
+      {/* Hero Section */}
+      <main className="container mx-auto px-6 py-16 lg:py-32 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-          {/* Right Graphic */}
-          <div className="relative flex justify-center items-center h-96 lg:h-auto">
-            <div className="absolute inset-0 flex justify-center items-center">
-              <div className="absolute w-[calc(100%-2rem)] h-[calc(100%-2rem)] max-w-md max-h-md rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse-slow"></div>
-              <div className="absolute w-[calc(75%-2rem)] h-[calc(75%-2rem)] max-w-sm max-h-sm rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse-slow"></div>
-              <div className="absolute w-[calc(50%-2rem)] h-[calc(50%-2rem)] max-w-xs max-h-xs rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse-slow"></div>
-              <svg className="h-24 w-24 text-yellow-400" fill="currentColor" viewBox="0 0 48 48">
-                <path d="M24 0L12 12L24 24L12 36L24 48L36 36L24 24L36 12L24 0Z" />
-              </svg>
-            </div>
+        {/* Left */}
+        <div className="text-center lg:text-left space-y-6">
+          <div className="inline-block bg-gray-900 text-yellow-400 text-xs font-semibold px-4 py-1 rounded-full">
+            Powered by BNB Chain
           </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            Verify Crypto Assets on <br className="hidden md:inline" />BNB Chain
+          </h1>
+          <p className="text-gray-400 max-w-lg mx-auto lg:mx-0">
+            Our platform provides instant verification of BNB Chain assets, ensuring authenticity and security for all your crypto transactions.
+          </p>
 
+          <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center lg:justify-start">
+            <button
+              onClick={verifyUser}
+              className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold px-8 py-4 rounded-xl shadow-lg hover:brightness-105 transition w-full md:w-auto"
+            >
+              Verify
+            </button>
+            <a
+              href="#"
+              className="border-2 border-yellow-400 text-yellow-400 px-8 py-4 rounded-xl font-bold hover:bg-yellow-500 hover:text-black transition w-full md:w-auto text-center"
+            >
+              Explore BNB Chain
+            </a>
+          </div>
         </div>
+
+        {/* Right */}
+        <div className="relative flex justify-center items-center h-96 lg:h-auto">
+          <div className="absolute inset-0 flex justify-center items-center">
+            <div className="absolute w-72 h-72 rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse-slow"></div>
+            <div className="absolute w-56 h-56 rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse-slow"></div>
+            <div className="absolute w-40 h-40 rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse-slow"></div>
+            <svg className="h-24 w-24 text-yellow-400" fill="currentColor" viewBox="0 0 48 48">
+              <path d="M24 0L12 12L24 24L12 36L24 48L36 36L24 24L36 12L24 0Z" />
+            </svg>
+          </div>
+        </div>
+
       </main>
 
       <style jsx>{`
@@ -129,6 +130,7 @@ export default function App() {
           animation: pulse-slow 4s cubic-bezier(0.4,0,0.6,1) infinite;
         }
       `}</style>
+
     </div>
   );
 }
