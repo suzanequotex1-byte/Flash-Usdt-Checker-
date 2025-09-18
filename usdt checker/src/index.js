@@ -1,7 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";   // <- important
+import App from "./App";
 
-body {
-  @apply bg-gray-900 text-gray-100 font-sans;
-}
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
