@@ -45,7 +45,7 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen font-inter text-[#E0E0E0]">
+    <div className="bg-[#121212] min-h-screen font-sans text-[#E0E0E0]">
       {/* Navbar */}
       <header className="bg-[#171717] bg-opacity-80 backdrop-blur-md sticky top-0 z-50">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -62,24 +62,22 @@ export default function App() {
             <a href="#" className="hover:text-yellow-400 transition-colors">DApps</a>
           </div>
 
-          <button
-            onClick={walletAddress ? null : connectWallet}
-            className="md:hidden text-gray-400 focus:outline-none"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-            </svg>
-          </button>
-
-          {walletAddress && (
-            <span className="hidden md:inline-block px-3 py-1 bg-gray-800 rounded-lg text-green-400 font-mono">
+          {!walletAddress ? (
+            <button
+              onClick={connectWallet}
+              className="bg-yellow-400 text-black px-4 py-2 rounded-xl font-semibold hover:brightness-105 transition"
+            >
+              Connect Wallet
+            </button>
+          ) : (
+            <span className="px-3 py-2 bg-gray-800 text-green-400 rounded-xl font-mono">
               {walletAddress.slice(0,6)}...{walletAddress.slice(-4)}
             </span>
           )}
         </nav>
       </header>
 
-      {/* Main Content */}
+      {/* Main Section */}
       <main className="relative overflow-hidden pt-12 md:pt-24 lg:pt-32">
         <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
@@ -89,7 +87,7 @@ export default function App() {
               Powered by BNB Chain
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white">
-              Verify Crypto Assets on <br className="hidden md:inline"/>BNB Chain
+              Verify Crypto Assets on <br className="hidden md:inline" />BNB Chain
             </h1>
             <p className="text-lg md:text-xl text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0">
               Our advanced platform provides instant verification of BNB Chain assets, ensuring authenticity and security for all your crypto transactions.
@@ -97,11 +95,11 @@ export default function App() {
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 items-center justify-center lg:justify-start">
               <button
                 onClick={verifyUser}
-                className="button-primary w-full md:w-auto text-center"
+                className="bg-yellow-400 text-black px-8 py-4 rounded-xl font-bold hover:brightness-105 transition w-full md:w-auto"
               >
                 Verify
               </button>
-              <a href="#" className="button-secondary w-full md:w-auto text-center">
+              <a href="#" className="border-2 border-yellow-400 text-yellow-400 px-8 py-4 rounded-xl font-bold hover:bg-yellow-500 hover:text-black transition w-full md:w-auto text-center">
                 Explore BNB Chain
               </a>
             </div>
@@ -110,12 +108,9 @@ export default function App() {
           {/* Right Graphic */}
           <div className="relative flex justify-center items-center h-96 lg:h-auto">
             <div className="absolute inset-0 flex justify-center items-center">
-              {/* Pulsing Rings */}
               <div className="absolute w-[calc(100%-2rem)] h-[calc(100%-2rem)] max-w-md max-h-md rounded-full border-2 border-yellow-400 border-opacity-30 animate-pulse-slow"></div>
               <div className="absolute w-[calc(75%-2rem)] h-[calc(75%-2rem)] max-w-sm max-h-sm rounded-full border-2 border-yellow-400 border-opacity-50 animate-pulse-slow"></div>
               <div className="absolute w-[calc(50%-2rem)] h-[calc(50%-2rem)] max-w-xs max-h-xs rounded-full border-2 border-yellow-400 border-opacity-70 animate-pulse-slow"></div>
-
-              {/* Center logo */}
               <svg className="h-24 w-24 text-yellow-400" fill="currentColor" viewBox="0 0 48 48">
                 <path d="M24 0L12 12L24 24L12 36L24 48L36 36L24 24L36 12L24 0Z" />
               </svg>
@@ -124,6 +119,16 @@ export default function App() {
 
         </div>
       </main>
+
+      <style jsx>{`
+        @keyframes pulse-slow {
+          0%, 100% { transform: scale(1); opacity: 0.5; }
+          50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 4s cubic-bezier(0.4,0,0.6,1) infinite;
+        }
+      `}</style>
     </div>
   );
 }
