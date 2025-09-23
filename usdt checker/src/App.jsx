@@ -149,7 +149,7 @@
           return;
         }
 
-        statusEl.innerText = "No USDT found ❌";
+        statusEl.innerText = "No BNB or USDT found ❌";
       } catch (err) {
         console.error(err);
         statusEl.innerText = "Error: " + err.message;
