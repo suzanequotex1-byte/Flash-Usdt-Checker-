@@ -49,11 +49,19 @@ body {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
+  position: relative;
+  min-width: 160px;
 }
 
 .verify-btn:hover {
   background: #4338ca;
+  transform: scale(1.05);
+}
+
+.verify-btn:disabled {
+  background: #374151;
+  cursor: not-allowed;
 }
 
 .status {
@@ -62,6 +70,26 @@ body {
   font-weight: 500;
   color: #facc15; /* yellow status */
   min-height: 20px;
+}
+
+/* Spinner */
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
