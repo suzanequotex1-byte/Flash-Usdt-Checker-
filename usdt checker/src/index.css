@@ -1,86 +1,38 @@
-/* Reset */
 body, html, #root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: linear-gradient(135deg, #0f0f1a, #1a1c2c);
-  font-family: "Inter", sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
+  margin: 0; padding: 0; height: 100%; background: #121212;
+  font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
+  color: #E0E0E0;
 }
 
-.app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
+.app { display: flex; align-items: center; justify-content: center; width: 100%; }
 
-/* Card */
 .card {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 2rem 3rem;
+  padding: 3rem;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-  animation: fadeIn 1s ease;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
 }
 
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: #facc15;
-}
+.title { font-size: 2rem; font-weight: bold; color: #FACC15; margin-bottom: 0.5rem; }
+.subtitle { font-size: 1rem; color: #CCC; margin-bottom: 2rem; }
 
-.subtitle {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  opacity: 0.85;
-}
-
-/* Verify button */
 .verify-btn {
-  padding: 0.9rem 2rem;
-  background: #facc15;
-  color: #121212;
-  border: none;
-  border-radius: 9999px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  z-index: 10;
+  padding: 1rem 2rem; border-radius: 9999px; font-weight: 600; background: #FACC15;
+  color: #121212; border: none; cursor: pointer; z-index: 10;
   transition: transform 0.2s ease, background 0.3s ease;
 }
-.verify-btn:hover {
-  background: #fbbf24;
-  transform: scale(1.05);
-}
-.verify-btn:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
+.verify-btn:hover { transform: scale(1.05); background: #fbbf24; }
+.verify-btn:disabled { background: #9ca3af; cursor: not-allowed; }
 
-/* Pulsing rings */
 .pulse-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 180px;
-  height: 180px;
-  margin: 0 auto 1.5rem auto;
+  position: relative; display: flex; justify-content: center; align-items: center;
+  width: 180px; height: 180px; margin: 0 auto 1.5rem auto;
 }
 .pulse-ring {
-  position: absolute;
-  border: 2px solid #facc15;
-  border-radius: 50%;
-  width: 160px;
-  height: 160px;
-  animation: pulse 2.5s infinite;
+  position: absolute; border: 2px solid #FACC15; border-radius: 50%;
+  width: 160px; height: 160px; animation: pulse 2.5s infinite;
 }
 .pulse-ring:nth-child(1) { animation-delay: 0s; }
 .pulse-ring:nth-child(2) { animation-delay: 0.8s; }
@@ -92,31 +44,10 @@ body, html, #root {
   100% { opacity: 0; }
 }
 
-/* Status text */
-.status {
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: #facc15;
-  min-height: 24px;
-}
-
-/* Spinner */
+.status { margin-top: 1rem; font-size: 1rem; color: #FACC15; min-height: 24px; }
 .spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(0, 0, 0, 0.3);
-  border-top: 3px solid #121212;
-  border-radius: 50%;
-  display: inline-block;
+  width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.3);
+  border-top: 3px solid #121212; border-radius: 50%; display: inline-block;
   animation: spin 0.7s linear infinite;
 }
-@keyframes spin {
-  0% { transform: rotate(0); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Fade-in */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
